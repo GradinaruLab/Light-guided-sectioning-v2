@@ -63,6 +63,7 @@ In vivo to stained images:
 ‘get_data_suite2P’- which creates the contour maps of all cells, of stained cells (if there are) and creates folder of images that can be uploads using imageJ for comparing in-vivo to stained image.*** 
 ‘run_get_fluor_suite2P’- looking at the all cells fluorescence and stained cells fluorescence after visually verify that cells are positively stained. For behavior.
 ‘run_ Zstack_get_fluor_suite2P’- looking at Z-stack fluorescence data, and compare non-stained to stained. 
+'find_stained_cells' used to identified the stained cells
 
 *** More detailed steps:
 1)	Run ‘get_data_suite2P’. make sure to define mice and file locations. 
@@ -73,6 +74,8 @@ Re-run ‘get_dat_suite2P’ with save_contour=1 new_contour=1
 After this is done, add the identify cell to the array: ’stained_cell_ind’
 To compare few sessions- few iterations are needed to find the same cells in all sessions. 
 I recommend save the combined tif from imageJ for future needs
+
+
 
 Figure S1: 
 
