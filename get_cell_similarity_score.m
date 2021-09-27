@@ -1,6 +1,6 @@
 function [I2,xc,yc,score,is_cell_score]=get_cell_similarity_score(fixed_GRIN,invivo_registered,xi,yi,parameters,iteration)
 % this function is used to find similarity between cells , for LGS_2P_registration_cell_quantification
-
+% Anat Kahan Cell Reposts 2021
 r=parameters.radius;
 
 for i=1:2
@@ -9,9 +9,6 @@ for i=1:2
     elseif i==2
         I=invivo_registered;
     end
-    
-    %[nx,ny,d] = size(I) ;
-    %[X,Y] = meshgrid(1:ny,1:nx) ;
     
     %figure; imshow(I) ;
    % hold on
@@ -66,8 +63,8 @@ end
 
 % check if in-vivo is cell by comparing middle to mean value of the
 % original  image
-%is_cell_score=max(max(I2_part{i}))>mean(mean(I2{2}))+3*std(mean(I2{2}));
-is_cell_score=max(max(I2_part{i}))>mean(mean(invivo_registered))+3*std(mean(invivo_registered));
+%is_cell_score=max(max(I2_part{i}))>mean(mean(invivo_registered))+3*std(mean(invivo_registered));
+% or - consider each cell as positive- ssim is calculated later 
 is_cell_score=1;
 end
     

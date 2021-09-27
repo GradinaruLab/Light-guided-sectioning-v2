@@ -1,5 +1,6 @@
 function run_2P_registration_cell_quantification
-%LGS. get cell quantification : #cells in-vivo that were found in fixed
+%LiGS Paper. Anat Kahan, 2021 
+%get cell quantification : #cells in-vivo that were found in fixed
 %versus # cells in-vivo total. based on manually selected cells, by mean
 %projection images, by morphology (not by activity)
 % uses ssim : Structural similarity (SSIM) index for measuring image
@@ -13,13 +14,11 @@ for mi=1:length(All_ID)
     mouse=All_ID{mi}
     switch mouse
         case 'WT58N_LGS'; num_reg_points=5;
-        case 'Drd1_1N'; num_reg_points=4;
         case 'WT35L_LGS'; num_reg_points=4;
         case 'WT36R_LGS';num_reg_points=5;
         case 'WT316RR_LGS';num_reg_points=6;
         case 'Drd1a_1816L_LGS';num_reg_points=4;
         case 'WT_242_LGS';num_reg_points=6;
-        case 'WT2170_LGS';num_reg_points=3;
     end
     
     for i=1:num_reg_points
@@ -52,10 +51,10 @@ end
 disp (['total mean of mean' num2str(mean(mean_per_positive))])
 disp (['total mean of median ' num2str(mean(med_per_positive))])
 disp(['amount of identified cells at best section ' num2str(mean(identified_cells_best_section)) '+-' num2str(std(identified_cells_best_section)/sqrt(length(identified_cells_best_section)))]); 
-max_cells_per_section
+
 
 figure
-bh=bar(med_per_positive); bh.FaceColor=[0.5 0.5 0.5]; hold on
+bh=bar(mean_per_positive); bh.FaceColor=[0.5 0.5 0.5]; hold on
 for mi=1:length(All_ID)
     plot(mi*ones(1,length(per_positive{mi})), per_positive{mi},'ok'); hold on
 end

@@ -1,38 +1,22 @@
 function [z,per_Positive]=find_fluor_quantification_zstack_10umStep_042820(mouse)
+% Anat Kahan, Cell Reports 2021
 %% to run this FUNCTION save as tiff in Zen
 %% CAN BE USED individually or with 'get_gfap_over_samples'
 %
-% use this as a helper to count cells. works well for vipGC and vIPGFP.
-% but have to be carefull and observe. works well in ~50-60% of images
+
 clear ALL_ch_images ALL_BW_ch_images all_BW_ch_images x y 
 
 
 if nargin == 0
     %%% set parameters
- %  mouse='VIPGFP11N'
- % mouse='VIPGFP14RL'
-  
- % mouse='VIPGC12LL'  
-  %mouse='VIPGC25L'  
-%  mouse='VIPGC60N'  
- %mouse='VIPGC62L'
-  % mouse='VIPGC102L'
- %   mouse='VIPGC103R'
  %mouse='VIPGC106LL'
    mouse='VIPGC107R'
    %mouse='VIPGC108L'
   % mouse='VIPGC110LL'
   % mouse='VIPGC113L'
    % mouse='VIPGC115L'
- % mouse='VIPGC118RR'
-   %mouse='VIPGC119L'
    % mouse='VIPGC122R'
-    %mouse='VIPGC123L'
-  % mouse='VIPGC128R'
-  %  mouse='VIPGC129L'
-    %mouse='VIPGC162'
-    %mouse='VIPGC174RR'
-end
+ end
 
 show_correlated_figure=0
 show3D_fig=0
@@ -69,16 +53,9 @@ folder=[TXTpar{raw_ind,7+ni} TXTpar{raw_ind,8+ni}];
 step=RAWpar{raw_ind,9+ni}; % image step. can be found in Zen image info
 num_channel=RAWpar{raw_ind,10+ni};
 fiber_image_ind=RAWpar{raw_ind,14+ni}-1; 
-%scn_range=RAWpar{raw_ind,12};
-min_X=RAWpar{raw_ind,16+ni};
-GFP_ch=RAWpar{raw_ind,15+ni};
 scn_image_ind=RAWpar{raw_ind,11+ni};% index of image scn is best expressed
-scn_range=[RAWpar{raw_ind,12+ni}:RAWpar{raw_ind,13+ni}];
 
 type='*.tiff';
-
-Factor=0.0;
-
 
 cd (folder)
 if move_files
@@ -99,12 +76,7 @@ for ci=1:num_channel
         % finds the index of the image
         tmp_image=imread((listoffiles(i).name));
         this_image=tmp_image(:,:,2);
-        %switch mouse
-         %   case 'VIPGFP14RL'
-          %      k=str2num(listoffiles(i).name(strfind(listoffiles(i).name,'_10X')+6:strfind(listoffiles(i).name,['c' num2str(dir_ch) 'x0'])-1))+1;
-           % otherwise
-                k=str2num(listoffiles(i).name(strfind(listoffiles(i).name,'b0v0t0z')+7:strfind(listoffiles(i).name,['c' num2str(dir_ch) 'x0'])-1))+1;
-        %end
+        k=str2num(listoffiles(i).name(strfind(listoffiles(i).name,'b0v0t0z')+7:strfind(listoffiles(i).name,['c' num2str(dir_ch) 'x0'])-1))+1;
         all_ch_images(:,:,k)=this_image;
     end
     ALL_ch_images{ci}=all_ch_images;
@@ -140,10 +112,6 @@ switch center
          end       
 end
 
-%% count GFP at channel 1 (0 in Zen)
-if count_GFP
-   [number_cells]= count_cells(x,y,num_channel,ALL_ch_images,scn_pixel_size,step);
-end
 
 %% after making sure that GFP counting is working well and xlsx file is updated, it continues to GFAP quantification 
 clear per_Positive

@@ -1,12 +1,14 @@
 function [norm_all_spks,all_spks,norm_all_dF,all_dF,all_F,cell_ind,cell_score] = get_fluor_suite2P(mouse_info,sess,exp,Fig,Fs)
 %% after running suite2P, a Fall.mat file is generated and get fluorscence of 'real' cells 
     % this function plot only the 'cell' , but returns fluorscence of all
+    % Written by Anat Kahan, Cell Reports 2021
+    
 %Fig=0;  
 clear M cell_ind cell_F norm_cell_F
 path='C:\Users\anatk\Documents\Light_sectioning\';
-%mouse='WT2170' ;M_num=2170; Z=960; fixed_section=27; fixed_path='WT2170_processed_confocal\WT2170_GC488_ARC_647_10X_zoom2p5_3um_step_10X.tiff_files\';
 mouse=mouse_info.mouse ;
-%M_num=mouse_info.M_num; Z=mouse_info.Z; fixed_section=mouse_info.fixed_section; fixed_path=mouse_info.fixed_path; 
+
+% load the suite2p processed data
 switch exp
     case 'behavior'
         switch mouse_info.session_style
@@ -23,22 +25,15 @@ switch exp
     case 'Zstack'
         cd ([path mouse '\tiff_Zstack_to_align\sess' num2str(sess) '\suite2p\plane0\'])
 end
-%fixedimage=imread([path mouse '\' num2str(Z) 'um\section_' num2str(fixed_section) '_Tissue2GRIN940nm.tif']);
+
 
 %% load matrix (M) with suite 2P info 
 M=load('Fall.mat');
-
+% find the accepted cells
 cell_ind=find(M.iscell(:,1)>0);
 cell_score=M.iscell(:,2);
 %cell_F=M.F(cell_ind,:);
 all_F=M.F-0.7*M.Fneu; % correct for background
-
-% switch mouse_info.session_style
-%     case 'combined'
-%       all_sess_index_on=int64([1:size(all_F,2)/mouse_info.exp_per_sess:size(all_F,2)]);
-%       all_sess_index_off=int64([size(all_F,2)/mouse_info.exp_per_sess:size(all_F,2)/mouse_info.exp_per_sess:size(all_F,2)]);
-%       all_F=all_F(:,all_sess_index_on(sess):all_sess_index_off(sess)); 
-% end
 
 A=size(all_F,2);
 for i=1:size(all_F,1) % calcolate dF-F0/F0
@@ -49,10 +44,10 @@ for i=1:size(all_F,1) % calcolate dF-F0/F0
            
         case 'individual'
             all_dF(i,:)=(all_F(i,:)-median(all_F(i,1:A/4)))/median(all_F(i,1:A/4));
-            % all_dF(i,:)=(all_F(i,:)-min(all_F(i,:)))/min(all_F(i,:));
-            % all_dF(i,:)=all_F(i,:);
+            
     end
 end
+% normalize data
 all_spks=M.spks;
 for i=1:size(M.F,1)
     norm_all_dF(i,:)=all_dF(i,:)./max(all_dF(i,:));

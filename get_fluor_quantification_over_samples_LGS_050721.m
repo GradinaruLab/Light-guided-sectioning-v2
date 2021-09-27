@@ -1,17 +1,11 @@
 %%cell counting and integrated fluor inyensity quantification
+% Written by Anat Kahan, Cell Reports 2021
 
 clear ALL_scn_sides z per_Positive
 GFAP_OVX=1;
 GFAP_count=0;
 new_quantifiction=0;
 %%% set data set: 
-% ALL_mouse={'VIPGFP11N','VIPGFP12R','VIPGFP14RL','VIPGC106LL', 'VIPGC107R', 'VIPGC108L', 'VIPGC110LL', 'VIPGC113L','VIPGC115L','VIPGC118RR', 'VIPGC119L', 'VIPGC122R', 'VIPGC123L', 'VIPGC128R', 'VIPGC129L'};
-% % scn_choosen_ind are determined by observation using Zen 
-% ALL_mouse_scn_choosen_ind=[22 23 24;21 26 31;10 14 17;14 15 16;8 11 14;14 21 31;23 24 26;13 16 19;20 24 29;15 16 18;8 11 15; 12 16 17;23 26 29;16 17 19;11 12 13];
-% ALL_genders={'F','F','F','M','F_OVX','F','F','M','F_OVX','F','F_OVX','F_OVX','F_OVX','F_OVX','NA'};
-% ALL_types={'SCN','NA','SCN','SCN','F_OVX','SCN','SCN','SCN_damage','F_OVX','NA','F_OVX','F_OVX','F_OVX','F_OVX','NA'};
-% ALL_staining={'Esr1','Esr1','PR','PR','Esr1','PR','PR','PR','Esr1','Esr1','Esr1','PR','PR','PR','Esr1'};
-% %recorded_SCN={'R','R','R','R','R','L','R','R','L','R','R','R','R','R'};% 110L 'R by image
 
 ALL_mouse={'VIPGFP11N','VIPGC103R','VIPGC106LL', 'VIPGC107R', 'VIPGC108L', 'VIPGC110LL', 'VIPGC113L','VIPGC115L','VIPGC118RR', 'VIPGC119L', 'VIPGC122R', 'VIPGC123L', 'VIPGC128R', 'VIPGC129L','VIPGC174RR'};
 
@@ -47,15 +41,9 @@ if GFAP_count
     %recorded_SCN={'R','R','R','R','R','L','R','R','L','R','R','R','R','R'};% 110L 'R by image
     recorded_SCN={'R','R','R','R','R'};% L is bottom. determined by image
 end
-% my_path='C:\Users\anatk\Documents\Data_Glab_home_work';
-% %my_path='D:\DATA_Glab';
-% %%% tiff files quality is much better here
-% file_name='LGS_SCN_VIP3';ni=1;
-% [NUMpar,TXTpar,RAWpar]=xlsread([my_path '\' file_name '.xlsx']);
 
 % this indexing is to compare GFAP recorded side to non recorded in non-OVX
 % females/males
-
 
 ALL_SCN_int=[];
 
@@ -74,15 +62,8 @@ for i=1:length(ALL_genders)
     elseif strcmp(ALL_genders{i},'NA')     ALL_genders_num(i)=4;
     end
 end
-%% define types with numbers
-% for i=1:length(ALL_types)
-%     if strcmp(ALL_types{i},'SCN');            ALL_types_num(i)=1;
-%     elseif strcmp(ALL_types{i},'F_OVX');      ALL_types_num(i)=2;
-%     elseif strcmp(ALL_types{i},'SCN_damage'); ALL_types_num(i)=3;
-%     elseif strcmp(ALL_types{i},'NA');         ALL_types_num(i)=4;   
-%     end
-% end
-%% define scn side by numbers. 1 is bottom, Left. 2 upper, whish is Right  
+
+%% define scn side by numbers. 1 is bottom, Left. 2 upper, which is Right  
 for i=1:length(recorded_SCN)
     if strcmp(recorded_SCN{i},'L');         ALL_scn_sides(i)=1; scn_not_recorded(i)=2;
     elseif strcmp(recorded_SCN{i},'R');     ALL_scn_sides(i)=2; scn_not_recorded(i)=1;
@@ -91,7 +72,6 @@ for i=1:length(recorded_SCN)
 end
 
 ALL_genders_num;
-
 
 if new_quantifiction
     clear z per_Positive 
@@ -156,16 +136,11 @@ those_mice(PR_FOVX)
 
 
 combined=[per_positive_recorded; per_positive_NOT_recorded];
-% norm_per_positive_recorded=[per_positive_recorded(:,1,:)./max(combined(:,1,:)) per_positive_recorded(:,2,:)./max(combined(:,2,:)) per_positive_recorded(:,3,:)./max(combined(:,3,:))];
-% norm_per_positive_NOT_recorded=[per_positive_NOT_recorded(:,1,:)./max(combined(:,1,:)) per_positive_NOT_recorded(:,2,:)./max(combined(:,2,:)) per_positive_NOT_recorded(:,3,:)./max(combined(:,3,:))];
 
 % relative norm
 norm_per_positive_recorded=[per_positive_recorded(:,1,:)./(per_positive_recorded(:,1,:)+per_positive_NOT_recorded(:,1,:)) per_positive_recorded(:,2,:)./(per_positive_recorded(:,2,:)+per_positive_NOT_recorded(:,2,:))  per_positive_recorded(:,3,:)./(per_positive_recorded(:,3,:)+per_positive_NOT_recorded(:,3,:)) ];
 norm_per_positive_NOT_recorded=[per_positive_NOT_recorded(:,1,:)./(per_positive_recorded(:,1,:)+per_positive_NOT_recorded(:,1,:)) per_positive_NOT_recorded(:,2,:)./(per_positive_recorded(:,2,:)+per_positive_NOT_recorded(:,2,:))  per_positive_NOT_recorded(:,3,:)./(per_positive_recorded(:,3,:)+per_positive_NOT_recorded(:,3,:)) ];
 
-% Z-score normalization 
-% norm_per_positive_recorded=[(per_positive_recorded(:,1,:)-sum(combined(:,1,:)))./median(combined(:,1,:)) (per_positive_recorded(:,2,:)-median(combined(:,2,:)))./median(combined(:,2,:)) (per_positive_recorded(:,3,:)-median(combined(:,3,:)))./median(combined(:,3,:))];
-% norm_per_positive_NOT_recorded=[(per_positive_NOT_recorded(:,1,:)-median(combined(:,1,:)))./median(combined(:,1,:)) (per_positive_NOT_recorded(:,2,:)-median(combined(:,2,:)))./median(combined(:,2,:)) (per_positive_NOT_recorded(:,3,:)-median(combined(:,3,:)))./median(combined(:,3,:))];
 
 if GFAP_count
     %% GFAP/GFP in implant side vs opposite
@@ -222,7 +197,7 @@ if GFAP_count
     disp(ALL_genders(ALL_scn_sides>0))
     
     
-    %% an alternative figure, based on conversation with Justin Bois, May 2021
+    %% based on conversation with Justin Bois, May 2021
     
     figure
     subplot(1,2,1)
@@ -260,34 +235,6 @@ end
 %% choose data to plot:
 if GFAP_OVX
     data_to_plot=per_positive_mean;
-    %
-    %
-    % clear h
-    % figure
-    % subplot(2,1,1)
-    % h=bar([1:2],nanmean(data_to_plot(Esr1_F,2:3)));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-    % plot([1*ones(size(data_to_plot(Esr1_F,2:3),1),1) 2*ones(size(data_to_plot(Esr1_F,2:3),1),1)],data_to_plot(Esr1_F,2:3),'k*')
-    % h=bar([4 5],nanmean(data_to_plot(Esr1_FOVX,2:3),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-    % plot([4*ones(length(data_to_plot(Esr1_FOVX,2:3)),1) 5*ones(length(data_to_plot(Esr1_FOVX,2:3)),1)],data_to_plot(Esr1_FOVX,2:3),'k*')
-    % xticks([1 2 4 5])
-    % ylabel('mean integrated fluorescence')
-    % xticklabels({'GFAP' 'Esr1' 'GFAP' 'Esr1'})
-    % xlabel('F vs OVX')
-    % ylim([0 32])
-    %
-    % subplot(2,1,2)
-    % h=bar([1:2],nanmean(data_to_plot(PR_F,2:3),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-    % plot([1*ones(size(data_to_plot(PR_F,2:3),1),1) 2*ones(size(data_to_plot(PR_F,2:3),1),1)],data_to_plot(PR_F,2:3),'k*')
-    % h=bar([4:5],nanmean(data_to_plot(PR_FOVX,2:3),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-    % plot([4*ones(length(data_to_plot(PR_FOVX,2:3)),1) 5*ones(length(data_to_plot(PR_FOVX,2:3)),1)],data_to_plot(PR_FOVX,2:3),'k*')
-    % xticks([1 2 4 5])
-    % ylabel('mean integrated fluorescence')
-    % xticklabels({'GFAP' 'PR' 'GFAP' 'PR'})
-    % xlabel('F vs OVX')
-    % ylim([0 32])
-    %
-    %
-    
     F=find(genders==1);% female
     FOVX=find(genders==2);% female OVX
     afi=union(F,FOVX);% all female index
@@ -295,15 +242,7 @@ if GFAP_OVX
     % first index is mouse, second is channel
     norm_data_to_plot=[data_to_plot(:,1)./max(data_to_plot(afi,1)) data_to_plot(:,2)./max(data_to_plot(afi,2)) data_to_plot(:,3)./max(data_to_plot(afi,3))];
     
-%     norm_data_to_plot_Esr1=[data_to_plot(:,1,:)./max(data_to_plot(afi,1,:)) data_to_plot(:,2,:)./max(data_to_plot(afi,2,:)) data_to_plot(:,3,:)./max(data_to_plot(union(Esr1_F,Esr1_FOVX),3,:))];
-%     norm_data_to_plot_PR=[data_to_plot(:,1,:)./max(data_to_plot(afi,1,:)) data_to_plot(:,2,:)./max(data_to_plot(afi,2,:)) data_to_plot(:,3,:)./max(data_to_plot(union(PR_F,PR_FOVX),3,:))];
-    
-    % normalied to max from females only
-  %  norm_data_to_plot=[data_to_plot(:,1,:)./max(data_to_plot(afi,1,:)) data_to_plot(:,2,:)./max(data_to_plot(afi,2,:)) data_to_plot(:,3,:)./max(data_to_plot(afi,3,:))];
-%     
-%     norm_data_to_plot_Esr1=[data_to_plot(:,1,:)./max(data_to_plot(afi,1,:)) data_to_plot(:,2,:)./max(data_to_plot(afi,2,:)) data_to_plot(:,3,:)./max(data_to_plot(union(Esr1_F,Esr1_FOVX),3,:))];
-%     norm_data_to_plot_PR=[data_to_plot(:,1,:)./max(data_to_plot(afi,1,:)) data_to_plot(:,2,:)./max(data_to_plot(afi,2,:)) data_to_plot(:,3,:)./max(data_to_plot(union(PR_F,PR_FOVX),3,:))];
-    
+ 
     %% figure that shows just GFAP: F vs OVX, Esr1 and PR, seperatly
     
     those_mice(F)
@@ -324,83 +263,14 @@ if GFAP_OVX
     xticklabels({'F' 'OVX'})
     xlabel('GFAP')
     ylim([0 1.1])
-   
+   % test normality
     h2(1)=lillietest(norm_data_to_plot(F,2));
     h2(2)=lillietest(norm_data_to_plot(FOVX,2));
     if sum(h2)==2
         [HscnG,PscnG]=ttest2(norm_data_to_plot(F,2),norm_data_to_plot(FOVX,2));
     else
-        %    [PscnG,HscnG]=ranksum(norm_data_to_plot(F,2),norm_data_to_plot(FOVX,2));
         [PscnG,tbl,stats]=kruskalwallis([norm_data_to_plot(F,2)',norm_data_to_plot(FOVX,2)'],[ones(1,length(F)),2*ones(1,length(FOVX))],'off');
     end
-    
-    
-    % now Esr1
-    
-    
-    %% GFAP, PR and ESr1 , female vs OVX
-    
-%     
-%     clear h
-%     figure
-%     subplot(1,3,1)
-%     h=bar(1,nanmean(norm_data_to_plot(F,2),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-%     plot(1*ones(size(norm_data_to_plot(F,2),1),1),norm_data_to_plot(F,2),'ko')
-%     h=bar(2,nanmean(norm_data_to_plot(FOVX,2),1));h.FaceColor=[0.5 0.5 0.5];hold on % OVX
-%     plot(2*ones(length(norm_data_to_plot(FOVX,2)),1) ,norm_data_to_plot(FOVX,2),'ko')
-%     xticks([1 2])
-%     ylabel('mean integrated fluorescence')
-%     xticklabels({'F' 'OVX'})
-%     xlabel('GFAP')
-%     ylim([0 1.1])
-%     [H,P]=ttest2(norm_data_to_plot(F,2),norm_data_to_plot(FOVX,2));
-%     % now Esr1
-%     clear h
-%     ci=3;
-%     subplot(1,3,2)
-%     h=bar(1,nanmean(norm_data_to_plot_Esr1(Esr1_F,ci),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-%     plot(1*ones(size(norm_data_to_plot_Esr1(Esr1_F,ci),1),1),norm_data_to_plot_Esr1(Esr1_F,ci),'ko')
-%     h=bar(2,nanmean(norm_data_to_plot_Esr1(Esr1_FOVX,ci),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-%     plot(2*ones(length(norm_data_to_plot_Esr1(Esr1_FOVX,ci)),1) ,norm_data_to_plot_Esr1(Esr1_FOVX,ci),'ko')
-%     xticks([1 2])
-%     ylabel('mean integrated fluorescence')
-%     xticklabels({'F' 'OVX'})
-%     xlabel('Esr1')
-%     ylim([0 1.1])
-%     [He,Pe]=ttest2(norm_data_to_plot_Esr1(Esr1_F,ci),norm_data_to_plot_Esr1(Esr1_FOVX,ci));
-%     % now PR
-%     clear h
-%     
-%     subplot(1,3,3)
-%     h=bar(1,nanmean(norm_data_to_plot_PR(PR_F,ci),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-%     plot(1*ones(size(norm_data_to_plot_PR(PR_F,ci),1),1),norm_data_to_plot_PR(PR_F,ci),'ko')
-%     h=bar(2,nanmean(norm_data_to_plot_PR(PR_FOVX,ci),1));h.FaceColor=[0.5 0.5 0.5];hold on % Females
-%     plot(2*ones(length(norm_data_to_plot_PR(PR_FOVX,ci)),1) ,norm_data_to_plot_PR(PR_FOVX,ci),'ko')
-%     xticks([1 2])
-%     ylabel('mean integrated fluorescence')
-%     xticklabels({'F' 'OVX'})
-%     xlabel('PR')
-%     ylim([0 1.1])
-%     
-%     
-%     h(1)=lillietest(norm_data_to_plot_PR(PR_F,2));
-%     h(2)=lillietest(norm_data_to_plot_PR(PR_FOVX,2));
-%     if sum(h)==2
-%         [HscnG,PscnG]=ttest2(norm_data_to_plot_PR(PR_F,2),norm_data_to_plot_PR(PR_FOVX,2));
-%     else
-%         %    [PscnG,HscnG]=ranksum(norm_data_to_plot_PR(PR_F,2),norm_data_to_plot_PR(PR_FOVX,2));
-%         [PscnG,tbl,stats]=kruskalwallis([norm_data_to_plot_PR(PR_F,2),norm_data_to_plot_PR(PR_FOVX,2)],'off');
-%     end
-%     
-%     
-%     
-%     [Hp,Pp]=ttest2(norm_data_to_plot_PR(PR_F,ci),norm_data_to_plot_PR(PR_FOVX,ci));
-%     1
-    
-
-
-
-
 end
 
 

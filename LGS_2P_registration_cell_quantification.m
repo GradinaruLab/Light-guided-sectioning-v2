@@ -1,5 +1,6 @@
 function [image_score,cell_score,is_cell,shuffeled_score]=LGS_2P_registration_cell_quantification(mouse,i,thresh)
 % following Register_2D_Zstack_2P_v3. check how many cells can be found 
+% Anat Kahan Cell Reports 2021
 
 %close all 
 clear AfixedImage registered Jregistered fixedImage movingImage AmovingImage atpath 
@@ -7,10 +8,6 @@ clear image_score
 
 comp=1.1 ;%1.1 is invivo vs processed fixed; 2.1 is procesessd, GRIN vs tissue side, 1100nm;
 
-
-
-
-% brains from 05-06/2019
 %%%%%%%% read Z and indexes from file
 file_name='LGS registration table home'; % 3 is with estrus state refered to proestrus
 
@@ -19,19 +16,10 @@ full_path=[path file_name '.xlsx'];
 %[NUM,TXT,RAW]=xlsread(full_path,'VS AK');
 [NUM,TXT,RAW]=xlsread(full_path);
 
-% brains from 05-06/2019
+
 invivo=[];
 if nargin == 0
-  % mouse='WT58N_LGS'; 
-    %mouse='Drd1_1N'; num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse));
-    %mouse='WT35L_LGS'; num_reg_points=5;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-   %mouse='WT36R_LGS';
-    
-   % mouse='WT36R_LGS';
-    mouse='WT316RR_LGS';
-    %mouse='Drd1a_1816L_LGS';num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-    %mouse='WT_242_LGS';num_reg_points=6;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));  
-    %mouse='WT2170_LGS';num_reg_points=3;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
+     mouse='WT36R_LGS';
     thresh=0.5;
     i=5; % index of plane
 end
@@ -42,16 +30,8 @@ else
     radius=30;
 end
 switch mouse
-    case 'WT58N_LGS'; num_reg_points=5; radius=30;
-    case 'Drd1_1N'; num_reg_points=4;
-    case 'WT35L_LGS'; num_reg_points=5;
     case 'WT36R_LGS';num_reg_points=5;
-    case 'WT316RR_LGS';num_reg_points=6;if i<3 radius=55; end; if i==3 || i==4 radius=45; end
-    case 'Drd1a_1816L_LGS';num_reg_points=4;
-    case 'WT_242_LGS';num_reg_points=6;
-    case 'WT2170_LGS';num_reg_points=3;
-end
-
+ end
 
 
 all_Z=-1*NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,2);
@@ -63,24 +43,7 @@ fixed_GRIN=imread([path mouse '\'   num2str(Z) 'um\' 'section_' num2str(choose_s
 [MOVINGREG.DisplacementField,invivo_registered] = imregdemons(tmp_invivo_registered,fixed_GRIN,100,'AccumulatedFieldSmoothing',1.5,'PyramidLevels',1);
 
 cd ([path mouse '\'   num2str(Z) 'um\'])
-% 
-% 
-% clear button
-% if exist('anchor_coordiantes_invivo.mat')
-%     promptMessage = sprintf('anchors coordinates file exist, to define new anchors?');
-%     titleBarCaption = 'Continue?';
-%     button = questdlg(promptMessage, titleBarCaption, 'load coordinates', 'define new', 'load coordinates');
-%   else
-%     button='define new';  
-% end
-% 
-% if strcmpi(button, 'load coordinates')
-%     load('anchor_coordiantes_invivo')
-% else
-%     maxAllowablePoints=3;
-%     [x_anchor,y_anchor]=get_cell_coordinates(fixed_GRIN,invivo_registered,maxAllowablePoints);
-%     save('anchor_coordiantes_invivo','x_anchor','y_anchor')
-% end
+
 %%%%%%% define cells 
 % first check if cell file alraedy exist 
 ASK=0; % define if open question box or not
@@ -109,7 +72,7 @@ else
 end
 
 %% define score threshhold
-iteration.alow_iteration=1;
+iteration.alow_iteration=0;
 iteration.step=3;
 iteration.limit=3;
 parameter.radius=radius;
@@ -174,8 +137,6 @@ for ci=1:length(x_all_cells)
     end
 end
 
-
-
 % get score for shuffeled cells, to check how method is good
 r2 = randperm(length(I2),length(I2));
 for li=1:length(I2)-1
@@ -191,8 +152,4 @@ M_size1=min(size(I2{Last_ind}{1},1),size(I2{1}{2},1));
 M_size2=min(size(I2{Last_ind}{1},2),size(I2{1}{2},2));
 shuffeled_score(Last_ind)=ssim(I2{Last_ind}{1}(1:M_size1,1:M_size2),I2{1}{2}(1:M_size1,1:M_size2),'Exponents',parameter.exponents_array);
 
-
-
 image_score=ssim(invivo_registered,fixed_GRIN,'Exponents',parameter.exponents_array);%luminance, contrast, and structural terms,
-peaksnr = psnr(invivo_registered,fixed_GRIN) ; %calculates the peak signal-to-noise ratio for the image
-err = immse(invivo_registered,fixed_GRIN);% calculates the mean-squared error (MSE) between the arrays X and Y.

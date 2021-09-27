@@ -11,19 +11,8 @@ SAVE_MAT=0; % for synchrony analysis in Python
 show_cells=0;
 
 if nargin==0
-   % exp_ID='2170' ;  channel='647'% decreased rates
-    % exp_ID='2174'; channel='647' % increase rates
-   % exp_ID='Str22'; % no change/small decrease
-    
-    % exp_ID='Str25';% increase rates
-    %  exp_ID='Str35';% increase rates
-    %  exp_ID='Str38';% increase rates
     exp_ID='Str39'; channel='647'% increase rates 
     % exp_ID='Str39';channel='555'
-    
-    % exp_ID='Str24';% no change/ increased first 5 minutes 
-   %  exp_ID='Str28';% no change
-  % exp_ID='C57_1N';% increased 
     
 end
 %mouse_info.session_style='individual';
@@ -32,187 +21,6 @@ mouse_info.session_style='combined'; mouse_info.exp_per_sess=2; % suite2P was do
 this_path='C:\Users\anatk\Documents\Light_sectioning\';
 
 switch exp_ID
-    case '2170'
-        mouse_info.mouse='WT2170';;mouse_info.M_num=2170;
-        mouse_info.suite2P_mode='sparse';
-        mouse_info.Z=960;
-        exp='behavior'
-        all_sess=[2:8];
-        % all_sess=[1:2];
-        
-        for si=1:3; sess_names{si}=['saline ' num2str(si+1)];end
-        for si=4:7; sess_names{si}=['cocaine ' num2str(si-3)];end
-        %%%%%%%%/sess2 sess3 sess4 5     6     7     8
-        %%cell
-        switch mouse_info.session_style
-            case 'individual'
-                
-                switch mouse_info.suite2P_mode
-                    case 'non_sparse'
-                        sess_stained_cells =[ 195   66    74    31    46    17    71;
-                            197    159    25    39    31    22    46 ;
-                            %30     23     23     49     37    nan    56;
-                            142    135    nan    nan   nan     nan    86;
-                            4       3      8      9     17      6    13;
-                            nan     61     nan     nan   19    16    24;
-                            70    121    170    127    35    nan    nan;
-                            15   nan    14    14    11    nan   nan;
-                            nan    nan    nan     98    52   nan   38]; % those cells are for non sparse mode
-                        sess_nonstained_cells=[]; % not defined yet
-                    case 'sparse'
-                        sess_stained_cells =[ 195   66    74    31    46    17    71;
-                            197    159    25    39    31    22    46 ;
-                            % 30     23     23     49     37    nan    56;
-                            142    135    nan    nan   nan     nan    86;
-                            4       3      8      9    17      6    13;
-                            nan     61    nan    nan   19    16    24;
-                            70    121     170    127    35    nan    74;
-                            15   nan      14     14    11    nan   nan;
-                            nan    nan    nan     98    52   nan   38
-                            119    134    144    140    78   65   nan];
-                        sess_nonstained_cells=[17 11 6 5 5 20 30;
-                            nan 9 16 6 3 3 2;
-                            5 5 4 1 13 4 6;
-                            nan 29 24 21 23 12 9;
-                            10 8 12 13 8 5 8;
-                            31 89 nan 43 57 35 19;
-                            140 60 79 22 64 62 32 ];
-                end
-                
-                % sess_stained_cells=1+[194,65,73,30,45,16,70;29,22,22,48,36,nan,55;3,2,7,8,16,5,12;45,16,57,102,89,10,25;
-                %      69,120,nan,nan,34,nan,nan;1,1,1,37,32,12,10;28,36,36,38,30,21,45];%each raw is a cell
-                
-            case 'combined'
-                sess_stained_cells =[ 1   2    3    5    6    17    21;
-                    2    10    8    9    5    3    4 ];%%% this is not real
-                sess_nonstained_cells=[2 5 6 21 31 4 5;
-                    11 9 16 6 4 3 2];
-                
-        end
-        %% load synchronosy data/Pegah Kassraian Fard 07/2020
-        [NUM,TXT,~] = xlsread([this_path '\' mouse_info.mouse '\Synchrony_Analysis\Results_Synchrony2']);
-    case '2174'
-        mouse_info.mouse='WT2174'; exp='behavior' ;mouse_info.M_num=2174;
-        mouse_info.Z=1100;
-        all_sess=[2:8];
-        all_sess=[1:2];
-        mouse_info.suite2P_mode='sparse';
-        for si=1:3; sess_names{si}=['saline ' num2str(si+1)];end
-        for si=4:7; sess_names{si}=['cocaine ' num2str(si-3)];end
-        %%%%%%%%/sess2 sess3 sess4 5     6     7     8
-        %%cell
-        switch mouse_info.session_style
-            case 'individual'
-                sess_stained_cells =[ 19 33 nan 52;
-                    9 nan 30 87;
-                    nan 17 30 46;
-                    77 31 17 71;
-                    45 25 12 nan;
-                    87 31 16 13;
-                    40 33 nan 61]';% transpose to 2170
-                sess_nonstained_cells=[21 22 4 25 5 ;
-                    nan 34 5 16 70;
-                    12 29 25 21 9;
-                    nan 50 22 25 4;
-                    13 43 nan 32 1;
-                    18 20 17 68 5;
-                    16 63 nan 24 nan]';% transpose to 2170
-                % sess=2; stained_cell_ind=[nan 19 33 66 52 ]; non_stained_cell_ind=[21 22 4 25 5 ];
-                % sess=3; stained_cell_ind=[60 9 nan 30 87]; non_stained_cell_ind=[nan 34 5 16 70 ];
-                %  sess=4;  stained_cell_ind=[72 nan 17 30 46]; non_stained_cell_ind=[12 29 25 21 9 ];
-                %  sess=5;  stained_cell_ind=[35 77 31 17 71]; non_stained_cell_ind=[nan 50 22 25 4 ];
-                %   sess=6; stained_cell_ind=[41 45 25 12 nan];non_stained_cell_ind=[13 43 nan 32 1 ];
-                %   sess=7; stained_cell_ind=[41,87,31,16,13];non_stained_cell_ind=[18 20 17 68 5 ];
-                % sess=8;  stained_cell_ind=[38 40 33 nan 61];non_stained_cell_ind=[16 63 nan 24 nan ];
-            case 'combined'
-                sess_stained_cells =[ 1   2    3    5    6    17    21;
-                    2    10    8    9    5    3    4 ];%%% this is not real
-                sess_nonstained_cells=[2 5 6 21 31 4 5;
-                    11 9 16 6 4 3 2];%%% this is not real
-                
-        end
-        
-    case 'Str22'
-        mouse_info.mouse='Str22'; exp='behavior' ;mouse_info.M_num=22;
-        mouse_info.Z=935;
-        all_sess=[1:2];
-        mouse_info.suite2P_mode='sparse';%%% check here
-        mouse_info.exp_per_sess=2;
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        
-        sess_stained_cells =[1 2 3 4 5 6 ;
-            1 2 3 4 5 6]';%
-        sess_nonstained_cells=[4 5 6 7 8 9;
-            4 5 6 7 8 9 ]';%
-    case 'Str25'
-        mouse_info.mouse='Str25'; exp='behavior' ;mouse_info.M_num=25;
-        mouse_info.Z=692;
-        all_sess=[1:2];
-        
-        
-        % session_style='individual';
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        % for si=3; sess_names{si}=['saline and cocaine ' num2str(si-2)];end % 3 is a combined session- easier with cell identification
-        sess_stained_cells =[1 2 3 4 5 2 ;
-            1 2 3 4 5 2]';%
-        sess_nonstained_cells=[4 5 6 1 4 2;
-            4 5 6 1 4 2 ]';%
-        
-    case 'Str38'
-        mouse_info.mouse='Str38'; exp='behavior' ;mouse_info.M_num=38;
-        mouse_info.Z=1065;
-        all_sess=[1:2];
-        
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        sess_stained_cells =[1 2 3 4 5 6 ;
-            1 2 3 4 5 6]';%
-        sess_nonstained_cells=[4 5 6 7 1 2;
-            4 5 6 7 1 2 ]';%
-    case 'Str35'
-        mouse_info.mouse='Str35'; exp='behavior' ;mouse_info.M_num=35;
-        mouse_info.Z=930;
-        all_sess=[1:2];
-        
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        sess_stained_cells =[10 5 6 43 2 13 ;
-            10 5 6 43 2 13]';%
-        sess_nonstained_cells=[10 5 6 43 2 13;
-            10 5 6 43 2 13]';%
-        
-        
-    case 'Str24'
-        mouse_info.mouse='Str24'; exp='behavior' ;mouse_info.M_num=24;
-        mouse_info.Z=730;
-        all_sess=[1:2];
-        %mouse_info.session_style='individual';
-        mouse_info.session_style='combined'; mouse_info.exp_per_sess=2; % suite2P was done on combined tiffs
-        mouse_info.suite2P_mode='';
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        sess_stained_cells =[10 5 6 43 2 13 ;
-            10 5 6 43 2 13]';% numbers are not true
-        sess_nonstained_cells=[10 5 6 43 2 13;
-            10 5 6 43 2 13]';% numbers are not true
-        
-        
-    case 'Str28'
-        mouse_info.mouse='Str28'; exp='behavior' ;mouse_info.M_num=24;
-        mouse_info.Z=680;
-        all_sess=[1:2];
-        %mouse_info.session_style='individual';
-        mouse_info.session_style='combined'; mouse_info.exp_per_sess=2; % suite2P was done on combined tiffs
-        mouse_info.suite2P_mode='';
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        sess_stained_cells =[10 5 6 43 2 13 ;
-            10 5 6 43 2 13]';% numbers are not true
-        sess_nonstained_cells=[10 5 6 43 2 13;
-            10 5 6 43 2 13]';% numbers are not true
-        
     case 'Str39'
         mouse_info.mouse='Str39_LGS'; exp='behavior' ;mouse_info.M_num=39;
         mouse_info.Z=680;
@@ -224,9 +32,7 @@ switch exp_ID
         for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
         % here sessions were analyzied together, as one movie, so cells ID
         % should be identifical for both sessions
-      %  sess_stained_cells =[14 97 3 9 36 29 82 63 88 77 39 61;14 97 3 9 36 29 82 63 88 77 39 61]'; 
-       % sess_nonstained_cells=[38 102 12 69 17 80 34 15 20 22 68 18; 38 102 12 69 17 80 34 15 20 22 68 18]';% 
-               
+      
        switch channel
            case '647'
                sess_stained_cells=[3 9 36 39 29 82 87;3 9 36 39 29 82 87]';
@@ -234,34 +40,10 @@ switch exp_ID
                sess_stained_cells=[82 87  ;82 87 ]';
        end
          sess_nonstained_cells=[38 68 12 69 17 80 18 15;38 68 12 69 17 80 18 15]';
-
-                  
-    case 'C57_1N'
-        mouse_info.mouse='C571N'; exp='behavior' ;mouse_info.M_num=1;
-        mouse_info.Z=600;
-        all_sess=[1:2];
-        %mouse_info.session_style='individual';
-        mouse_info.session_style='combined'; mouse_info.exp_per_sess=2; % suite2P was done on combined tiffs
-        mouse_info.suite2P_mode='';
-        for si=1; sess_names{si}=['saline ' num2str(si)];end
-        for si=2; sess_names{si}=['cocaine ' num2str(si-1)];end
-        sess_stained_cells =[10 5 6 43 2 13 ;
-            10 5 6 43 2 13]';% numbers are not true
-        sess_nonstained_cells=[10 5 6 43 2 13;
-            10 5 6 43 2 13]';% numbers are not true
 end
 
 switch exp_ID
-    case {'2170' '2174'} 
-        if strcmp(mouse_info.session_style,'individual')
-        %sess_to_plot=[1,4:7];label_names={'sal#1' 'coc#1' 'coc#2' 'coc#3' 'coc#4'}; xtick_loc=[1 9 17 25 33];
-        sess_to_plot=[1:7];label_names={'sal#1' 'sal#2' 'sal#3' 'coc#1' 'coc#2' 'coc#3' 'coc#4'}; xtick_loc=[1 9 17 25 33 41 49 57];
-        %sess_to_plot=[1,7];label_names={'sal#1' 'coc#4'}; xtick_loc=[1 9];
-    %case {'Str22', 'Str25', 'Str35', 'Str38'};
-        else
-           sess_to_plot=[1,2];label_names={'sal#1' 'coc#1'}; xtick_loc=[1 9];
-        end
-    otherwise
+     case 'Str39'
         sess_to_plot=[1,2];label_names={'sal#1' 'coc#1'}; xtick_loc=[1 9];
       %  sess_to_plot=[3];label_names={'sal and coc #1'}; xtick_loc=[1];
 end
@@ -402,20 +184,20 @@ cd(['C:\Users\anatk\Documents\Light_sectioning\' mouse_info.mouse '\Synchrony_An
  %% at this point Pegah is doing the syn analysis with python for 2170
  % this reads the results:
  if ~isempty(NUM)
-     Syn_Matrix_all(:,1)=NUM([1:3 ,6:9],1);% all cells values, all 20 minutes
-     Syn_Matrix_all(:,2)=NUM([1:3 ,6:9],2);% all cells SEM, all 20 minutes
-     Syn_Matrix_all(:,3)=NUM([1:3 ,6:9],5);% all cells values,first  10 minutes
-     Syn_Matrix_all(:,4)=NUM([1:3 ,6:9],6);% all cells SEM, first 10 minutes
-     Syn_Matrix_all(:,5)=NUM([1:3 ,6:9],9);% all cells values,last  10 minutes
-     Syn_Matrix_all(:,6)=NUM([1:3 ,6:9],10);% all cells SEM, last 10 minutes
+     Syn_Matrix_all(:,1)=NUM([1:3 ,6:9],1);% all cells values, all 10 minutes
+     Syn_Matrix_all(:,2)=NUM([1:3 ,6:9],2);% all cells SEM, all 10 minutes
+     Syn_Matrix_all(:,3)=NUM([1:3 ,6:9],5);% all cells values,first  5 minutes
+     Syn_Matrix_all(:,4)=NUM([1:3 ,6:9],6);% all cells SEM, first 5 minutes
+     Syn_Matrix_all(:,5)=NUM([1:3 ,6:9],9);% all cells values,last  5 minutes
+     Syn_Matrix_all(:,6)=NUM([1:3 ,6:9],10);% all cells SEM, last 5 minutes
      %% load ARC
      ARC_raws=[18,21,24,28,31,34,37];
-     Syn_Matrix_ARC(:,1)=NUM(ARC_raws,1);% ARC cells values, all 20 minutes
-     Syn_Matrix_ARC(:,2)=NUM(ARC_raws,2);% ARC cells SEM, all 20 minutes
-     Syn_Matrix_ARC(:,3)=NUM(ARC_raws,5);% ARC cells values,first  10 minutes
-     Syn_Matrix_ARC(:,4)=NUM(ARC_raws,6);% ARC cells SEM, first 10 minutes
-     Syn_Matrix_ARC(:,5)=NUM(ARC_raws,9);% ARC cells values,last  10 minutes
-     Syn_Matrix_ARC(:,6)=NUM(ARC_raws,10);% ARC cells SEM, last 10 minutes
+     Syn_Matrix_ARC(:,1)=NUM(ARC_raws,1);% ARC cells values, all 10 minutes
+     Syn_Matrix_ARC(:,2)=NUM(ARC_raws,2);% ARC cells SEM, all 10 minutes
+     Syn_Matrix_ARC(:,3)=NUM(ARC_raws,5);% ARC cells values,first  5 minutes
+     Syn_Matrix_ARC(:,4)=NUM(ARC_raws,6);% ARC cells SEM, first 5 minutes
+     Syn_Matrix_ARC(:,5)=NUM(ARC_raws,9);% ARC cells values,last  5 minutes
+     Syn_Matrix_ARC(:,6)=NUM(ARC_raws,10);% ARC cells SEM, last 5 minutes
      %% load non-ARC
      nonARC_raws=1+[18,21,24,28,31,34,37];
      Syn_Matrix_nonARC(:,1)=NUM(nonARC_raws,1);% nonARC cells values, all 20 minutes
@@ -426,7 +208,6 @@ cd(['C:\Users\anatk\Documents\Light_sectioning\' mouse_info.mouse '\Synchrony_An
      Syn_Matrix_nonARC(:,6)=NUM(nonARC_raws,10);% nonARC cells SEM, last 10 minutes
  end
 %% plot synch analysis
-
 if ~isempty(NUM)
     %% all cells
     fh=figure;
@@ -679,64 +460,6 @@ if plot_hist
             %  legend('non ARC');
         end
     end
-end
-%%% statistics
-switch exp_ID
-    case {'2170','2174'}
-        if ~isempty(sess_stained_cells)
-            sess_ind1=1;
-            %sess_ind2=7;
-            sess_ind2=2;
-            % index of cells, stained
-            ind1a=sess_stained_cells(:,sess_ind1); ind2a=ind1a(~isnan(ind1a));% stained cells
-            ind1b=sess_stained_cells(:,sess_ind2); ind2b=ind1b(~isnan(ind1b));% stained cells
-            % index of cells, nonstained
-            indn1a=sess_nonstained_cells(:,sess_ind1); indn2a=indn1a(~isnan(indn1a));% non stained cells
-            indn1b=sess_nonstained_cells(:,sess_ind2); indn2b=indn1b(~isnan(indn1b));% non stained cells
-            % define groups
-            G1=first10_peak_width_mean{sess_ind1}(indn2a);
-            G2=first10_peak_width_mean{sess_ind2}(indn2b);
-            GN=[ones(1,length(G1)) 2*ones(1,length(G2))];
-            % check KW test
-            [pkw,~,~]=kruskalwallis([G1 G2],GN,'off');
-            if pkw<0.05; hkw=1; else hkw=0; end
-        end
-end
-
-%% plot trait using plotSpread
-for ti=1:length(all_trait)
-    trait=all_trait{ti};
-    clear  sess_names_trait sess_markers_trait sess_markers_color
-    switch trait
-            case 'rates'
-                trait_to_plot=rates; YMAX=60*0.25;%LABEL='rate';hist_vect=[0:0.05:0.7];YMAX=7; XMAX=0.7
-            case 'area'
-                trait_to_plot=peak_proms_mean; YMAX=1.7;%LABEL='prominance'; hist_vect=[0:0.5:7]; YMAX=7; XMAX=7;
-            case 'width'
-                trait_to_plot=peak_width_mean; YMAX=0.23;%LABEL='width'; hist_vect=[0:10:200]; YMAX=6; XMAX=200;
-            case 'rates first10'
-                trait_to_plot=first10_rates; YMAX=60*0.25;%LABEL='rate';hist_vect=[0:0.05:0.7];YMAX=7; XMAX=0.7
-            case 'area first10'
-                trait_to_plot=first10_peak_proms_mean; YMAX=1.7;%LABEL='prominance'; hist_vect=[0:0.5:7]; YMAX=7; XMAX=7;
-            case 'width first10'
-                trait_to_plot=first10_peak_width_mean; YMAX=0.23;%LABEL='width'; hist_vect=[0:10:200]; YMAX=6; XMAX=200;
-           case 'rates last10'
-                trait_to_plot=last10_rates; YMAX=60*0.25;%LABEL='width'; hist_vect=[0:10:200]; YMAX=6; XMAX=200;
-          case 'area last10'
-                trait_to_plot=last10_peak_proms_mean; YMAX=1.7;%LABEL='prominance'; hist_vect=[0:0.5:7]; YMAX=7; XMAX=7;
-            case 'width last10'
-                trait_to_plot=last10_peak_width_mean; YMAX=0.23;%LABEL='width'; hist_vect=[0:10:200]; YMAX=6; XMAX=200;
-
-
-    end
-    plot_info.trait=trait;
-    plot_info.sess_names=sess_names;
-    plot_info.sess_markers=sess_markers;
-    plot_info.sess_to_plot=sess_to_plot;
-    plot_info.YMAX=YMAX;
-    plot_info.mouse_ID=mouse_info.mouse;
-     plotSpread_cell_activity_trait_for_2P(trait_to_plot,plot_info,cell_ind,sess_stained_cells,sess_nonstained_cells)
-
 end
 
 %% check cells that had increased rates
@@ -1061,24 +784,7 @@ for i=1:length(all_which_cells)
     end
 end
 end
-% 
-% for si=1:length(all_sess)
-%     sess_ind=all_sess(si);
-% 
-%     results.rates{si}=rates{si}(cell_ind{si});
-% 
-%     results.peak_proms_mean{si}=peak_proms_mean{si}(cell_ind{si});
-%     results.peak_width_mean{si}=peak_width_mean{si}(cell_ind{si});
-%     results.first10_rates{si}=first10_rates{si}(cell_ind{si});
-%     results.first10_peak_proms_mean{si}=first10_peak_proms_mean{si}(cell_ind{si});
-%     results.first10_peak_width_mean{si}=first10_peak_width_mean{si}(cell_ind{si});
-%     results.last10_rates{si}=last10_rates{si}(cell_ind{si});
-%     
-%     results.sess_stained_cells(si)=sess_stained_cells(:,si);
-%     results.sess_nonstained_cells(si)=sess_nonstained_cell(:,si);
-%     
-% end
-% 
+
 
 clear results
 results.cell_ind=cell_ind;

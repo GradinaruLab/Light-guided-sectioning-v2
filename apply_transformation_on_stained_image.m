@@ -1,5 +1,7 @@
 function apply_transformation_on_stained_image
 % load the tform for the fixed tissue and staining
+% Anat Kahan Cell Reports 2021
+
 file_name='LGS registration table home'; % 3 is with estrus state refered to proestrus
 %path='D:\Data_Glab\Light_sectioning\';
 path='C:\Users\anatk\Documents\Light_sectioning\';
@@ -11,18 +13,9 @@ full_path=[path file_name '.xlsx'];
 comp=2 %1 is in vivo vs processed; 1.1 is invivo vs processed, processed is fixed; 2 is procesessd, GRIN vs tissue side; ; 2.1 is procesessd, GRIN vs tissue side, 1100nm;3 is confocal to 2P, tissue side; 4 is invivo to 2P
 i=3;
 
-% brains from 05-06/2019
-%mouse='WT58N_LGS'; num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='Drd1_1N';num_reg_points=4; this_mouse_ind=find(contains(TXT(:,1),mouse));
-%mouse='WT35L_LGS'; num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT36R_LGS';num_reg_points=5;invivo='WT36invivo1';this_mouse_ind=find(contains(TXT(:,1),invivo));
 mouse='WT36R_LGS';M_num='36R' ; num_reg_points=6;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT316RR_LGS';num_reg_points=6;this_mouse=strfind(TXT(:,1),mouse(1:end-4));
-%mouse='Drd1a_1816L_LGS';num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT_242_LGS';num_reg_points=6;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT2170_LGS';M_num=2170;num_reg_points=4;
-%mouse='WT2174_LGS';M_num=2174;num_reg_points=4; 
 %mouse='Str39_LGS';M_num=39;num_reg_points=4; ch=[1 2 3];
+
 ch=[3]; 
 %fixed_path='WT2170_processed_confocal\WT2170_GC488_ARC_647_10X_zoom2p5_3um_step_10X.tiff_files\';
 
