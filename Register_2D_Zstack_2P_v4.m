@@ -1,5 +1,6 @@
 function Register_2D_Zstack_2P_v4 
-% load 1 plane data, and fit by manually finding the same neurons
+% Anat Kahan, Cell Reports 2021
+% load one plane data, and fit by manually finding the same neurons
 % v4 includes a non rigid correction to the affine transformation 
 
 close all
