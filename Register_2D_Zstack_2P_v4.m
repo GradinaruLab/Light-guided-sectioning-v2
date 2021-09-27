@@ -1,6 +1,5 @@
 function Register_2D_Zstack_2P_v4 
 % load 1 plane data, and fit by manually finding the same neurons
-% variation of v2, after revision Feb2021
 % v4 includes a non rigid correction to the affine transformation 
 
 close all
@@ -19,18 +18,8 @@ full_path=[path file_name '.xlsx'];
 %[NUM,TXT,RAW]=xlsread(full_path,'VS AK');
 [NUM,TXT,RAW]=xlsread(full_path);
 
-% brains from 05-06/2019
-%mouse='WT58N_LGS'; num_reg_points=4;%this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='Drd1_1N';num_reg_points=4; this_mouse_ind=find(contains(TXT(:,1),mouse));
-%mouse='WT35L_LGS'; num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
 %mouse='WT36R_LGS';num_reg_points=5;invivo='WT36invivo1';this_mouse_ind=find(contains(TXT(:,1),invivo));
 mouse='WT36R_LGS';num_reg_points=7;
-%mouse='WT316RR_LGS';num_reg_points=6;this_mouse=strfind(TXT(:,1),mouse(1:end-4));
-%mouse='Drd1a_1816L_LGS';num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT_242_LGS';num_reg_points=6;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT2170_LGS';num_reg_points=4;this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
-%mouse='WT2174_LGS';num_reg_points=5;
-%mouse='Drd1_1N_LGS';num_reg_points=3;
 %mouse='Str39_LGS';num_reg_points=4;
 
 this_mouse_ind=find(contains(TXT(:,1),mouse(1:end-4)));
@@ -40,15 +29,7 @@ all_Z=-1*NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,2);
 all_s2=NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,3);
 all_s1=NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,5);
 all_s1100=NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,7);
-%all_s3=NUM(this_mouse_ind+4:this_mouse_ind+4+num_reg_points-1,9);
 
-
-
-% previous brains
-%mouse='Drd1a_1816L_LGS';
-%mouse='VIPWT_316RR_LGS';
-%mouse='WT_242_LGS';
-%mouse='TH_1960_LGS';% Ryan's TH-cre, one plane in vivo
 
 inds= strfind(mouse,'_');
 s_ind=strfind(mouse,'Str');
@@ -63,20 +44,15 @@ else
     mouse_title=[mouse(1:2) ' ' M_num ' ' mouse(inds(1)+1:end)];
 end
 
-
-
 %% those parameters are taken from 'LGS registration table'
 
 Z=all_Z(i); % IN-VIVO
 choose_section2=all_s2(i); % PROCESSED GRIN side
 choose_section3=all_s1(i); % PROCESSED Tissue side
-%choose_section4=all_s3(i); % confocal PROCESSED Tissue side
 choose_section_T1100=all_s1100(i);
 % registration method:
 method_fixed='NRS';
 
-if ~isempty(strmatch(mouse,'WT2170_LGS')); mouse='WT2170'; choose_section2=choose_section_T1100; end
-if ~isempty(strmatch(mouse,'WT2174_LGS')); mouse='WT2174'; choose_section2=choose_section_T1100; end
 if ~isempty(strmatch(mouse,'Str39_LGS')) && Z==870 ; Z2=600; else Z2=Z; end
 % register confocal directly to invivo 
 %if ~isempty(strmatch(mouse,'Str39_LGS')) && Z==870 ; choose_section2=choose_section_T1100; end
@@ -84,8 +60,6 @@ if ~isempty(strmatch(mouse,'Str39_LGS')) && Z==870 ; Z2=600; else Z2=Z; end
 switch comp
     case 1
         fullpath=[path mouse '\fit_files\' M_num '_invivo1_' num2str(Z) '_FIT_NRS.mat'];
-%     case 1.1
-%         fullpath=['D:\DATA_Glab\Light_sectioning\' mouse '\fit_files\' M_num '_invivo1p1_' num2str(Z) '_FIT_NRS.mat'];
     case 2
         fullpath=[path mouse '\fit_files\' M_num '_processed_940nm_' num2str(Z) '_FIT_' method_fixed '.mat' ];
     case 3
@@ -114,7 +88,6 @@ atpath{4}=[TXT{this_mouse_ind+2,8} '\'];
 
 atpath{6}=atpath{1};%% might need adjusted for 36R: %atpath{6}=['D:\DATA_Glab\Light_sectioning\WT36R_LGS\WT36R_fixed_2P\WT36R_GRIN_1100nm_350_512_125_27mW\adjusted\'];
 
-
 switch comp
     case 1 % in vivo vs processed. In vivo is the fixed
         % load processed/Fixed GRIN imaging data
@@ -124,46 +97,27 @@ switch comp
           % the reference (when available)
         fixedImage=imread([atpath{1} 'section_' num2str(choose_section2) '.tif']);
         switch mouse
-            case 'TH_1960_LGS' % because I have only tissue side, and it is up side down 
-                fixedImage=flipud(fixedImage);
             case 'Str39_LGS'
                 fixedImage=imread([atpath{4} 'AVG_C1.tif']);
         end
                  
         % load in vivo data
-       % tpath=['D:\DATA_Glab\Light_sectioning\' mouse '\' M_num '_invivo\' M_num '_MEAN\'];
         disp('load ''in vivo'' data')
         tmpImage=imread(atpath{2});
-        switch mouse
-            case 'WT_242_LGS'
-                movingImage=imrotate(tmpImage,90);
-            otherwise
-                movingImage=imrotate(tmpImage,0);
-        end
+        movingImage=imrotate(tmpImage,0);
 
     case 2 % procesessd, GRIN vs tissue side,940nm   
 
         % load processed GRIN imaging data
         disp('load ''processed GRIN lens'' data')
-        if strcmp(mouse,'WT2170') || strcmp(mouse,'WT2174') % no good imaging for fixed through GRIN lens 
-            fixedImage=imread(atpath{2});
-        else
-            fixedImage=imread([atpath{1} 'section_' num2str(choose_section2) '.tif']);
-        end
+        fixedImage=imread([atpath{1} 'section_' num2str(choose_section2) '.tif']);
+        
         if size(fixedImage,3)>1; fixedImage=fixedImage(:,:,2);end
-
   
         % load processed tissue imaging data
         disp('load ''processed Tissue lens'' data')
         
-        % 2170/2174 no good imaging for fixed through GRIN lens
-        if strcmp(mouse,'WT2170') || strcmp(mouse,'WT2174') 
-            movingImage=imread([atpath{3} 'section_' num2str(choose_section2) '.tiff']);
-        elseif strcmp(mouse,'Drd1_1_N_LGS') % for Drd1_1_N- saved fliped
-            movingImage=imread([atpath{3} 'section_' num2str(choose_section2) '.tif']);
-        elseif strcmp(mouse,'Drd1_1N_LGS') % for Drd1_1N- saved fliped
-               movingImage=imread([atpath{3} 'section_' num2str(choose_section3) '.tif']);
-        elseif strcmp(mouse,'Str39_LGS')
+        if strcmp(mouse,'Str39_LGS')
                 %movingImage=imread([atpath{4} 'AVG_C1.tif']);
  
          movingImagetmp=imread([atpath{3} 'section_' num2str(choose_section3) '.tif']);
@@ -174,10 +128,6 @@ switch comp
         end
         
         if size(movingImage,3)>1; movingImage=movingImage(:,:,2);end
-        switch mouse
-            case 'Drd1_1_N_LGS'
-                movingImage=imrotate(movingImage,90);
-        end
         
       case 3 % procesessd, tissue side, 2P vs confocal
 
@@ -189,8 +139,6 @@ switch comp
             otherwise
                 fixedImage=imread([atpath{3} 'section_adjusted_' num2str(choose_section3) '.tif']);
         end
-       % fixedImage=fliplr(fixedImagetmp); already flipped, so no need an
-       % extra one
         
         % load processed tissue imaging data
         disp('load ''processed Tissue, confocal'' data')
@@ -207,14 +155,11 @@ switch comp
                 
         end
 end
-% 
-
 
 %% brightness adjustment 
 BrF(1)=20;
 BrF(2)=8;
 [AmovingImage, AfixedImage]=adjust_brightness(uint16(movingImage),fixedImage,BrF(1),BrF(2),1);
-
 
 if ~exist(fullpath)
     %% define similarity points
@@ -232,17 +177,15 @@ end
 %% apply the tranformation to the moving figure 
 Jregistered = imwarp(AmovingImage,mytform,'OutputView',imref2d(size(AfixedImage))); 
 Jregistered=uint16(Jregistered);
-%%add an aditional step of registration
-%  [MOVINGREG.DisplacementField,MOVINGREG.RegisteredImage] = imregdemons(moving_image,fixed_image,100,'AccumulatedFieldSmoothing',1.5,'PyramidLevels',1);
-%[MOVINGREG.DisplacementField,Jregistered2] = imregdemons(Jregistered,AfixedImage,100,'AccumulatedFieldSmoothing',1.5,'PyramidLevels',1);
 
 [MOVINGREG.DisplacementField,Jregistered2] = imregdemons(Jregistered,AfixedImage,100,'AccumulatedFieldSmoothing',2,'PyramidLevels',1);
+
 % looking for the new tform
 [optimizer, metric] = imregconfig('multimodal');
+
 %Affine transformation consisting of translation, rotation, scale, and shear
 NR_tform = imregtform(Jregistered2,Jregistered,'affine',optimizer,metric);
 Jregistered3 = imwarp(Jregistered,NR_tform,'OutputView',imref2d(size(Jregistered))); 
-
 
 ssim(AfixedImage,Jregistered)
 ssim(AfixedImage,uint16(Jregistered2))
@@ -255,23 +198,17 @@ xlabel('manual')
 subplot(1,2,2)
 imshowpair(AfixedImage,Jregistered2,'montage')
 xlabel('manual with NR')
-%registered = imwarp(AmovingImage, mytform);
-%% calculates correlation coefficient 
-R = corr2(AfixedImage,Jregistered);
 
 fake1=zeros(size(AfixedImage,1));
 
 figure
 subplot (1,4,3), imshowpair(AfixedImage,fake1),title('adj.B fixed Image ')
 subplot (1,4,1), imshow(AmovingImage), title('adj.B moving Image ');set(gca,'xtick',[0 175 350]);set(gca,'xticklabel',{'0','175','350'});
-
-%subplot (1,3,2), subimage(movingImage),title('Original moving Image - GRIN')
 subplot (1,4,4), imshowpair(AfixedImage,Jregistered2), title('fixed and registered Image')
 subplot (1,4,2), imshowpair(fake1,Jregistered2), title('registered moving Image')
 
 [FIT.this_angle, FIT.this_scale]= LGS_get_angle_and_scale(mytform);
 FIT.mytform=mytform;
-FIT.R=R;
 FIT.BrF=BrF;
 FIT.NR_tform=NR_tform;
 
@@ -282,18 +219,12 @@ switch comp
         text(-350,600,[ 'section ' num2str(choose_section2) ',to section' num2str(choose_section3) ', ' mouse_title, ', ' method_fixed])
     case 3
         text(-350,600,[ num2str(Z) 'um ' mouse_title, ', ' method_fixed])
-%     case 4
-%         text(-350,600,[ num2str(Z) 'um  ,to section' num2str(choose_section3) ', ' mouse_title, ', ' method_fixed])
 end
 
 figure, imshowpair(AfixedImage,Jregistered2), title('fixed image and registered Image')
-disp(['R = ' num2str(R)])
-
-
 
 switch comp
     case 1
-      %  save(['D:\DATA_Glab\Light_sectioning\' mouse '\fit_files\' M_num '_invivo1_' num2str(Z) '_tform_NRS'],'mytform')
         save([path mouse '\fit_files\' M_num '_invivo1_' num2str(Z) '_FIT_NRS'],'FIT')
         sind=strfind(atpath{2},'\');
         imwrite(Jregistered,[atpath{2}(1:sind(end))   num2str(Z)  'um_registered_invivo2GRIN.tif'])
@@ -304,7 +235,6 @@ switch comp
           imwrite(Jregistered,[num2str(Z)  'um_registered_GRIN2invivo.tif'])
           imwrite(Jregistered2,[num2str(Z)  'um_registered_GRIN2invivo_NR.tif'])
     case 2
-      %  save(['D:\DATA_Glab\Light_sectioning\' mouse '\fit_files\' M_num '_processed_940nm_' num2str(Z) '_tform_' method_fixed ],'mytform')
         save([path mouse '\fit_files\' M_num '_processed_940nm_' num2str(Z) '_FIT_' method_fixed ],'FIT')
         imwrite(Jregistered,[atpath{3} 'section_registered_' num2str(choose_section3) '.tif'])
           imwrite(Jregistered2,[atpath{3} 'section_registered_' num2str(choose_section3) '_NR.tif'])
@@ -315,7 +245,6 @@ switch comp
       
         imwrite(AfixedImage,[path mouse '\'   num2str(Z) 'um\' 'section_' num2str(choose_section2) '_GRIN940nm.tif'])
     case 3 % the matrix saved is in relate to **adjusted** tissue, 2P!!!!  
-     %   save(['D:\DATA_Glab\Light_sectioning\' mouse '\fit_files\' M_num '_2PtoConfocal_' num2str(Z) '_tform_' method_fixed ],'mytform')
         save([path mouse '\fit_files\' M_num '_Confocal2twoP_' num2str(Z) '_FIT_' method_fixed ],'FIT')
         imwrite(Jregistered,[path mouse '\'   num2str(Z) 'um\' num2str(Z) 'um_registered_Confocal2twoP.tif'])
         imwrite(Jregistered2,[path mouse '\'    num2str(Z) 'um\' num2str(Z) 'um_registered_Confocal2twoP_NR.tif'])
