@@ -38,7 +38,6 @@ Figure 4:
 1)	Image z-stack 2P tissue side, through GRIN lens, and confocal, tissue side, if more colors are available. Tissue side can be imaged from 0 (GRIN lens surface) to ~200/250 um, as more is not relevant. GRIN side- all the range that have signal also in the in-vivo imaging. 
 2)	Invivo data analysis: 
 In vivo, 3 min recording each Z plane : 
-THIS IS NOT WHAT I USE ANY MORE: In each folder I have ‘AnalyzeThemAll_Zstackb’ – that creates tiff and save also the mean and max files
 a.	to save tiff files for each 3 minutes of Z-stack I use ‘Zstack_show_movie_persection’ that show movies and save them (as movies). 
 b.	Apply motion correction: apply_motion_correction(‘non-rigid’) or (‘rigid’)
 c.	To save tiff files for suite 2P:
