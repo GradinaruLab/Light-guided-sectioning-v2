@@ -50,10 +50,10 @@ In cases where suite2P failed to produce a good motion correction, the function 
 3)	2p-fixed tissue Zsatck : create a new folder for the new .dat. While this folder is open (empty), run ‘plot_all_Zstack_2P’ and choose the relevant .dat file 
 
 4)	Inspect Z-stack using imageJ. Find few clear marks, that following them allow a full reconstruction of all z stack. 
-5)	Using ‘Register_2D_Zstack_2P_v2’ – register selected planes for each brain. For each transformation saves correlation coefficient (R), transform matrix (tform), and angle and scale. 
+5)	Using ‘Register_2D_Zstack_2P_v2’ – register selected planes for each brain. For each transformation saves correlation coefficient (R), transform matrix (tform), and angle and scale. This function also uses 'LGS_get_angle_and_scale' to get the angle and the scale of the transformation for further analysis. 	
 v2 has the option to register directly from in-vivo to Tissue, as I needed for WT2170 and WT2174
-6)	Optional: Volume registration: ‘make_complete_zstack_registration’
-7)	Apply_transformation_on_stained_image – apply transformation on 647 staining and save it
+7) Optional: Volume registration: ‘make_complete_zstack_registration’
+8)	Apply_transformation_on_stained_image – apply transformation on 647 staining and save it
 
 Figure 5 and 6: 
 
